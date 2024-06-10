@@ -45,7 +45,7 @@ def image(chance):
                 |         """, """
                 _______
                 |      |
-                |      0print(f"The word was: {random_word}")
+                |      0
                 |      |
                 |         """, """
                 _______
