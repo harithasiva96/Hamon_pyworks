@@ -1,0 +1,286 @@
+postgres=# \c hamon
+You are now connected to database "hamon" as user "postgres".
+
+#Create a table employee, with the following fields and constraints added to each field
+ id (primary key)
+ name (not null)
+ department (like marketing, sales, development, testing, devops etc) (not null)
+ branch (use any city name)  (a null field)
+ salary ( a five-digit value) ( a not null field with default value 0)
+
+hamon=#  CREATE TABLE employee(id serial primary key, name VARCHAR(150) NOT NULL, department VARCHAR(150) NOT NULL, branch VARCHAR(150) NULL, salary INT CHECK(salary >= 10000 AND salary <= 99999) NOT NULL DEFAULT 0); 
+CREATE TABLE
+hamon=# SELECT * FROM employee;
+ id | name | department | branch | salary 
+----+------+------------+--------+--------
+(0 rows)
+
+
+#Insert at least 10 records into the employee table with relevant data.
+
+hamon=# INSERT INTO employee(name, department, branch, salary) VALUES('haritha','software development','berlin',40000), ('lenin','software development','tokyo',75000),('sara','marketing','beijing',45000),('ashlin','web designer','chikago',62000),('levis','finance','bristol',38000),('reshma','marketing','manchester',70000),('lima','web designer','delhi',45000),('sona','marketing','cambridge',60000),('aishwarya','software testing','dubai',78000),('fasilath','finance','sharjah',55000);
+INSERT 0 10
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary 
+----+-----------+----------------------+------------+--------
+  1 | haritha   | software development | berlin     |  40000
+  2 | lenin     | software development | tokyo      |  75000
+  3 | sara      | marketing            | beijing    |  45000
+  4 | ashlin    | web designer         | chikago    |  62000
+  5 | levis     | finance              | bristol    |  38000
+  6 | reshma    | marketing            | manchester |  70000
+  7 | lima      | web designer         | delhi      |  45000
+  8 | sona      | marketing            | cambridge  |  60000
+  9 | aishwarya | software testing     | dubai      |  78000
+ 10 | fasilath  | finance              | sharjah    |  55000
+(10 rows)
+
+
+#Add the field email, and phone_number with null constraint. (Phone Number can be a string)
+
+hamon=# ALTER TABLE employee ADD COLUMN email VARCHAR(150) NULL UNIQUE, ADD COLUMN phone_number VARCHAR(100) NULL;
+ALTER TABLE
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary | email | phone_number 
+----+-----------+----------------------+------------+--------+-------+--------------
+  1 | haritha   | software development | berlin     |  40000 |       | 
+  2 | lenin     | software development | tokyo      |  75000 |       | 
+  3 | sara      | marketing            | beijing    |  45000 |       | 
+  4 | ashlin    | web designer         | chikago    |  62000 |       | 
+  5 | levis     | finance              | bristol    |  38000 |       | 
+  6 | reshma    | marketing            | manchester |  70000 |       | 
+  7 | lima      | web designer         | delhi      |  45000 |       | 
+  8 | sona      | marketing            | cambridge  |  60000 |       | 
+  9 | aishwarya | software testing     | dubai      |  78000 |       | 
+ 10 | fasilath  | finance              | sharjah    |  55000 |       | 
+(10 rows)
+
+
+#Modify the field salary to remove default constraints added to it.
+
+hamon=# ALTER TABLE employee ALTER COLUMN salary DROP DEFAULT;
+ALTER TABLE
+
+
+#Update the fields phone_number and email for the employee having a salary between 10100 and 50045 and their department should be either marketing or testing
+
+hamon=# UPDATE employee SET email = 'hamon@gmail.com', phone_number = '9876543210' WHERE salary BETWEEN 10100 AND 50045 AND department IN ('marketing','software testing'); 
+UPDATE 1
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary |      email      | phone_number 
+----+-----------+----------------------+------------+--------+-----------------+--------------
+  1 | haritha   | software development | berlin     |  40000 |                 | 
+  2 | lenin     | software development | tokyo      |  75000 |                 | 
+  4 | ashlin    | web designer         | chikago    |  62000 |                 | 
+  5 | levis     | finance              | bristol    |  38000 |                 | 
+  6 | reshma    | marketing            | manchester |  70000 |                 | 
+  7 | lima      | web designer         | delhi      |  45000 |                 | 
+  8 | sona      | marketing            | cambridge  |  60000 |                 | 
+  9 | aishwarya | software testing     | dubai      |  78000 |                 | 
+ 10 | fasilath  | finance              | sharjah    |  55000 |                 | 
+  3 | sara      | marketing            | beijing    |  45000 | hamon@gmail.com | 9876543210
+
+
+#Update email for the rest of the employees.
+
+hamon=# UPDATE employee SET email = 'h@gmail.com' WHERE name = 'haritha';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'len@gmail.com' WHERE name = 'lenin';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'ash@gmail.com' WHERE name = 'ashlin';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'lev@gmail.com' WHERE name = 'levis';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'r@gmail.com' WHERE name = 'reshma';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'lima@gmail.com' WHERE name = 'lima';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'sona@gmail.com' WHERE name = 'sona';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'aishu@gmail.com' WHERE name = 'aishwarya';
+UPDATE 1
+hamon=# UPDATE employee SET email = 'fasi@gmail.com' WHERE name = 'fasilath';
+UPDATE 1
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary |      email      | phone_number 
+----+-----------+----------------------+------------+--------+-----------------+--------------
+  3 | sara      | marketing            | beijing    |  45000 | hamon@gmail.com | 9876543210
+  1 | haritha   | software development | berlin     |  40000 | h@gmail.com     | 
+  2 | lenin     | software development | tokyo      |  75000 | len@gmail.com   | 
+  4 | ashlin    | web designer         | chikago    |  62000 | ash@gmail.com   | 
+  5 | levis     | finance              | bristol    |  38000 | lev@gmail.com   | 
+  6 | reshma    | marketing            | manchester |  70000 | r@gmail.com     | 
+  7 | lima      | web designer         | delhi      |  45000 | lima@gmail.com  | 
+  8 | sona      | marketing            | cambridge  |  60000 | sona@gmail.com  | 
+  9 | aishwarya | software testing     | dubai      |  78000 | aishu@gmail.com | 
+ 10 | fasilath  | finance              | sharjah    |  55000 | fasi@gmail.com  | 
+(10 rows)
+
+
+#Modify the field email to add a UNIQUE constraint to it.
+
+hamon=# ALTER TABLE employee ADD CONSTRAINT UNIQUE_CONSTRAINT UNIQUE(email);
+ALTER TABLE
+
+#Select all the employees
+
+hamon=# SELECT name FROM employee;
+   name    
+-----------
+ sara
+ haritha
+ lenin
+ ashlin
+ levis
+ reshma
+ lima
+ sona
+ aishwarya
+ fasilath
+(10 rows)
+
+#Select id, name, email from employees having a salary greater than or equal to 45000, the department should contain the string ‘maRKeT’, and the branch can be ‘Being’, ‘Tokyo’ or ‘New York’.
+Select only the first 5 records in the descending order of salary. (You can add new records into the employee table if necessary)
+
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary |      email      | phone_number 
+----+-----------+----------------------+------------+--------+-----------------+--------------
+  3 | sara      | marketing            | beijing    |  45000 | hamon@gmail.com | 9876543210
+  1 | haritha   | software development | berlin     |  40000 | h@gmail.com     | 
+  2 | lenin     | software development | tokyo      |  75000 | len@gmail.com   | 
+  4 | ashlin    | web designer         | chikago    |  62000 | ash@gmail.com   | 
+  5 | levis     | finance              | bristol    |  38000 | lev@gmail.com   | 
+  6 | reshma    | marketing            | manchester |  70000 | r@gmail.com     | 
+  7 | lima      | web designer         | delhi      |  45000 | lima@gmail.com  | 
+  8 | sona      | marketing            | cambridge  |  60000 | sona@gmail.com  | 
+  9 | aishwarya | software testing     | dubai      |  78000 | aishu@gmail.com | 
+ 10 | fasilath  | finance              | sharjah    |  55000 | fasi@gmail.com  | 
+ 11 | yedhu     | marketing            | tokyo      |  60000 | yedhu@gmailcom  | 9765432180
+ 12 | subin     | marketing            | new york   |  78000 | subin@gmail.com | 9654321780
+ 13 | sooraj    | marketing            | beijing    |  65000 | sr@gmail.com    | 9543216780
+ 14 | padma     | marketing            | new york   |  80000 | p@gmail.com     | 9213456780
+(14 rows)
+
+hamon=#  SELECT id, name, email FROM employee WHERE salary >= 45000 AND department ILIKE '%maRKeT%' AND branch IN ('beijing','tokyo','new york') ORDER BY salary DESC LIMIT 5;
+ id |  name  |      email      
+----+--------+-----------------
+ 14 | padma  | p@gmail.com
+ 12 | subin  | subin@gmail.com
+ 13 | sooraj | sr@gmail.com
+ 11 | yedhu  | yedhu@gmailcom
+  3 | sara   | hamon@gmail.com
+(5 rows)
+
+
+#Select all the employees having phone_number null;
+
+hamon=# SELECT name FROM employee WHERE phone_number is NULL;
+   name    
+-----------
+ haritha
+ lenin
+ ashlin
+ levis
+ reshma
+ lima
+ sona
+ aishwarya
+ fasilath
+(9 rows)
+
+
+#Find the no. of employees in each department with a count greater than 3. Display in the ascending order of the department.
+
+hamon=# SELECT department, count(name) FROM employee GROUP BY department HAVING COUNT(name) > 3 ORDER BY department; 
+ department | count 
+------------+-------
+ marketing  |     7
+(1 row)
+
+
+#Find the maximum, minimum, and average salary in each department.
+
+hamon=# SELECT department, max(salary), min(salary), avg(salary) FROM employee group by department;
+      department      |  max  |  min  |        avg         
+----------------------+-------+-------+--------------------
+ finance              | 55000 | 38000 | 46500.000000000000
+ web designer         | 62000 | 45000 | 53500.000000000000
+ software development | 75000 | 40000 | 57500.000000000000
+ software testing     | 78000 | 78000 | 78000.000000000000
+ marketing            | 80000 | 45000 | 65428.571428571429
+(5 rows)
+
+
+#Find distinct emails from the employee table.
+
+hamon=# SELECT DISTINCT email FROM employee;
+      email      
+-----------------
+ sona@gmail.com
+ p@gmail.com
+ aishu@gmail.com
+ ash@gmail.com
+ lima@gmail.com
+ h@gmail.com
+ yedhu@gmailcom
+ hamon@gmail.com
+ r@gmail.com
+ fasi@gmail.com
+ sr@gmail.com
+ lev@gmail.com
+ len@gmail.com
+ subin@gmail.com
+(14 rows)
+
+
+#Find the no. of employees in each department whose name starts with the letter ‘L’.
+
+hamon=# SELECT department, COUNT(name) FROM employee WHERE name LIKE 'l%' GROUP BY department;
+      department      | count 
+----------------------+-------
+ web designer         |     1
+ finance              |     1
+ software development |     1
+(3 rows)
+
+
+#Find the no. of employees, no. of employees with phone_number in each city.
+
+hamon=# SELECT branch, COUNT(*) as employee_count, COUNT(phone_number) as employee_with_phn FROM employee GROUP BY branch;
+   branch   | employee_count | employee_with_phn 
+------------+----------------+-------------------
+ chikago    |              1 |                 0
+ delhi      |              1 |                 0
+ bristol    |              1 |                 0
+ sharjah    |              1 |                 0
+ cambridge  |              1 |                 0
+ manchester |              1 |                 0
+ tokyo      |              2 |                 1
+ berlin     |              1 |                 0
+ new york   |              2 |                 2
+ dubai      |              1 |                 0
+ beijing    |              2 |                 2
+(11 rows)
+
+
+#Delete the employee records with no phone_number and should belong to the city ‘Tokyo’. 
+hamon=# DELETE FROM employee WHERE phone_number is NULL AND branch IN ('tokyo');
+DELETE 1
+hamon=# SELECT * FROM employee;
+ id |   name    |      department      |   branch   | salary |      email      | phone_number 
+----+-----------+----------------------+------------+--------+-----------------+--------------
+  3 | sara      | marketing            | beijing    |  45000 | hamon@gmail.com | 9876543210
+  1 | haritha   | software development | berlin     |  40000 | h@gmail.com     | 
+  4 | ashlin    | web designer         | chikago    |  62000 | ash@gmail.com   | 
+  5 | levis     | finance              | bristol    |  38000 | lev@gmail.com   | 
+  6 | reshma    | marketing            | manchester |  70000 | r@gmail.com     | 
+  7 | lima      | web designer         | delhi      |  45000 | lima@gmail.com  | 
+  8 | sona      | marketing            | cambridge  |  60000 | sona@gmail.com  | 
+  9 | aishwarya | software testing     | dubai      |  78000 | aishu@gmail.com | 
+ 10 | fasilath  | finance              | sharjah    |  55000 | fasi@gmail.com  | 
+ 11 | yedhu     | marketing            | tokyo      |  60000 | yedhu@gmailcom  | 9765432180
+ 12 | subin     | marketing            | new york   |  78000 | subin@gmail.com | 9654321780
+ 13 | sooraj    | marketing            | beijing    |  65000 | sr@gmail.com    | 9543216780
+ 14 | padma     | marketing            | new york   |  80000 | p@gmail.com     | 9213456780
+(13 rows)
+
